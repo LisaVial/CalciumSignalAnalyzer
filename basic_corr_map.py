@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = pd.read_csv(r'G:\Lisa\data\Niko\STD_Cortex 10x 20fps gain 2_MMStack_Default.ome-1_normalized.csv',
+data = pd.read_csv(r'G:\Lisa\data\Niko\Cortex7 10x 20fps gain 2 wash in 20 mM KCl_MMStack_Default_1-1900_normlized.csv',
                    delimiter=';' )
 corr = data.corr()
 print(corr)
