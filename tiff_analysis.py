@@ -92,7 +92,7 @@ with tifffile.TiffFile(tif_path) as tif:
     ax_10 = fig.add_subplot(g[8::, 16::])
 
     imagej_hyperstack = tif.asarray()
-    ax_1.imshow(imagej_hyperstack[0])
+    ax_1.imshow(imagej_hyperstack[139])
     ax_1.set_title('original')
 
     img_filt = aniso_filter(imagej_hyperstack[0])
@@ -113,10 +113,9 @@ with tifffile.TiffFile(tif_path) as tif:
     # plt.show()
 
     n, m, d = imagej_hyperstack.shape
-    print(len(imagej_hyperstack[0]))
 
     # initialize the edges image
-    edges_img = imagej_hyperstack[0].copy()
+    edges_img = imagej_hyperstack[139].copy()
     edges_img_aniso = img_filt.copy()
     edges_img_gauss = img_gauss.copy()
     edges_img_median = img_med.copy()
@@ -126,7 +125,7 @@ with tifffile.TiffFile(tif_path) as tif:
         for col in range(3, d - 3):
             # create little local 3x3 box
             # embed()
-            local_pixels = imagej_hyperstack[0][row - 1:row + 2, col - 1:col + 2]
+            local_pixels = imagej_hyperstack[139][row - 1:row + 2, col - 1:col + 2]
             # embed()
             local_pixels_1 = img_filt[row - 1:row + 2, col - 1:col + 2]
             local_pixels_2 = img_gauss[row - 1:row + 2, col - 1:col + 2]
@@ -204,7 +203,7 @@ with tifffile.TiffFile(tif_path) as tif:
     ax_10.imshow(edges_img_avg)
     ax_10.set_title('avg edges')
 
-    plt.savefig('edge_detection_comp.png')
+    plt.savefig('edge_detection_comp_3.png')
     plt.show()
 #
 #     plt.show()
