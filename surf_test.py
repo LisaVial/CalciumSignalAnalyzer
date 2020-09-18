@@ -1,10 +1,8 @@
-from PIL import Image
-from IPython import embed
-import tifffile as tiff
 import numpy as np
 import os
 import matplotlib.pyplot as plt
 import cv2
+from IPython import embed
 
 
 def get_circular_rois_mask(img, kp, plot_on = False):
@@ -47,26 +45,28 @@ def get_circular_rois_mask(img, kp, plot_on = False):
     return mask
 
 
-root = r'D:\Lisa\data\Niko'
-surf = cv2.xfeatures2d.SURF_create(400)
+root = r'G:\Lisa\data\Niko'
+surf = cv2.xfeatures2d.SURF_create(800)
 fig, axs = plt.subplots(1, 1)
 for root, sub_folders, files in os.walk(root):
     for file in files:
         kps = []
         intensities = []
         new_root = root + '\\'
-        tiff_stack = tiff.imread(os.path.join(new_root + file))
-        rois_over_time = 
-        for i in range(tiff_stack.shape[0]):
-            outfile = os.path.splitext(file)[0] + '_' + str(i) + '.png'
-            plt.imshow(tiff_stack[i])
-            ax = plt.gca()
-            ax.get_xaxis().set_visible(False)
-            ax.get_yaxis().set_visible(False)
-            ax.get_xaxis().set_ticks([])
-            ax.axes.get_yaxis().set_ticks([])
-            plt.imsave(new_root + outfile, tiff_stack[i], cmap='gray')
-            img = cv2.imread(new_root + outfile, cv2.IMREAD_GRAYSCALE)
+        tiff_stack = cv2.imreadmulti(os.path.join(new_root + file))
+        for i in range(len(tiff_stack[1])):
+            # outfile = os.path.splitext(file)[0] + '_' + str(i) + '.png'
+            # plt.imshow(tiff_stack[i])
+            # ax = plt.gca()
+            # ax.get_xaxis().set_visible(False)
+            # ax.get_yaxis().set_visible(False)
+            # ax.get_xaxis().set_ticks([])
+            # ax.axes.get_yaxis().set_ticks([])
+            # plt.imsave(new_root + outfile, tiff_stack[i], cmap='gray')
+            img = tiff_stack[1][i]
+            if i == 0:
+                plt.imshow(img)
+                plt.show()
             # img.thumbnail(img.size)
             # img.convert('RGB')
             # img.save(new_root + outfile, "JPEG", quality=100)
@@ -74,7 +74,6 @@ for root, sub_folders, files in os.walk(root):
             kps += kp
             # embed()
             rois = get_circular_rois_mask(img, kps, plot_on=False)
-            print(rois.shape, ': \n', rois)
 
             h, w = rois.shape
             roi_image = np.zeros((h, w, 3), np.uint8)
@@ -83,15 +82,17 @@ for root, sub_folders, files in os.walk(root):
                 for y in range(w-1):
                     if rois[x][y]:
                         roi_image[x][y] = img[x][y]
-            plt.imshow(roi_image)
-            plt.show()
-            # for x_idx, y_idx in zip(np.where(rois==True)[0], np.where(rois==True)[2]):
-            #     embed()
-            #     intensities = img[rois]
-            img_surf = cv2.drawKeypoints(img, kps, None, (255, 0, 0), 2)
+
             outfile_2 = os.path.splitext(file)[0] + '_surf_' + str(i) + '.png'
-            axs.imshow(img_surf)
-            plt.imsave(new_root + outfile, tiff_stack[i], cmap='gray')
-            plt.show()
+            if i == tiff_stack.shape[0]:
+                plt.imshow(roi_image)
+                plt.show()
+                # for x_idx, y_idx in zip(np.where(rois==True)[0], np.where(rois==True)[2]):
+                #     embed()
+                #     intensities = img[rois]
+            # img_surf = cv2.drawKeypoints(img, kps, None, (255, 0, 0), 2)
+            # axs.imshow(img_surf)
+            # plt.imsave(new_root + outfile, tiff_stack[i], cmap='gray')
+            # plt.show()
 
 # img = cv2.imread(tif_path, cv2.IMREAD_GRAYSCALE)
